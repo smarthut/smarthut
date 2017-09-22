@@ -1,0 +1,22 @@
+[[constraint]]
+  name = "github.com/go-chi/chi"
+  version = "3.2.1"
+
+[[constraint]]
+  name = "github.com/go-chi/jwtauth"
+  # version = "^3.0.1"
+  revision = "89031fb71dd3b0a94441f1e830abfd2f9606b44b"
+
+# Change to `constraint` after https://github.com/go-chi/jwtauth/issues/18
+# would be solved
+[[override]]
+  name = "github.com/dgrijalva/jwt-go"
+  revision = "a539ee1a749a2b895533f979515ac7e6e0f5b650"
+
+[[constraint]]
+  name = "golang.org/x/crypto"
+  branch = "master"
+
+[[constraint]]
+  name = "github.com/go-chi/render"
+  version = "1.0.0"

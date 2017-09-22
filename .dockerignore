@@ -1,0 +1,19 @@
+# vcs
+.git
+
+# dotfiles
+.editorconfig
+.gitignore
+.gitlab-ci.yml
+.dockerignore
+Dockerfile
+
+# docs
+LICENSE
+README.md
+
+# source files
+*.go
+/vendor
+Gopkg.lock
+Gopkg.toml
