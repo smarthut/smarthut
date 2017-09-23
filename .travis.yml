@@ -7,7 +7,7 @@ before_install:
 
 script:
   - make build
-  - go test -race -coverprofile=coverage.txt -covermode=atomic
+  - ./test.sh
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
