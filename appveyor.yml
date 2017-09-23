@@ -1,0 +1,14 @@
+version: 1.0.{build}
+platform: x64
+build:
+  verbosity: minimal
+clone_folder: c:\gopath\src\ithub.com\leonidboykov\smarthut
+environment:
+  GOPATH: c:\gopath
+init:
+  - copy c:\MinGW\bin\mingw32-make.exe c:\MinGW\bin\make.exe
+  - set PATH=%PATH%;C:\MinGW\bin;%GOPATH%\bin
+install:
+  - make vendor
+build_script:
+  - make build

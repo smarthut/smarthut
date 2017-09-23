@@ -1,6 +1,7 @@
 # Smart Hut [WIP]
 [![GoDoc](https://godoc.org/github.com/leonidboykov/smarthut?status.svg)](https://godoc.org/github.com/leonidboykov/smarthut)
 [![Build Status](https://travis-ci.org/leonidboykov/smarthut.svg?branch=master)](https://travis-ci.org/leonidboykov/smarthut)
+[![Build Status](https://ci.appveyor.com/api/projects/status/9lmx8of9b927h9e0?svg=true)](https://ci.appveyor.com/project/leonidboykov/smarthut)
 [![codecov](https://codecov.io/gh/leonidboykov/smarthut/branch/master/graph/badge.svg)](https://codecov.io/gh/leonidboykov/smarthut)
 [![Go Report Card](https://goreportcard.com/badge/github.com/leonidboykov/smarthut)](https://goreportcard.com/report/github.com/leonidboykov/smarthut)
 
