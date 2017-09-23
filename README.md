@@ -8,6 +8,10 @@
   * [laurent112](device/laurent112)
   * [megad328](device/megad328)
 
+### Acknowledgements
+
+  * [Chi](https://github.com/go-chi/chi)
+
 ## License
 
 This package is licensed under the [MIT](LICENSE) license.
