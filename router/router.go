@@ -41,6 +41,11 @@ func Initialize() http.Handler {
 				r.Get("/", handler.ListUsers)
 				r.Get("/{username}", handler.GetUser)
 			})
+
+			// Sensor routes
+			r.Route("/sensor", func(r chi.Router) {
+				r.Get("/", handler.ListSensors)
+			})
 		})
 	})
 

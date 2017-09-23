@@ -4,17 +4,15 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
-	"log"
 	"os"
-	"path"
-	"path/filepath"
-	"strings"
 
 	"golang.org/x/crypto/bcrypt"
+
+	"github.com/leonidboykov/smarthome/utils"
 )
 
 const (
-	dataPath = "./data/users/"
+	userPath = "./data/users/"
 	dataExt  = ".json"
 )
 
@@ -24,39 +22,21 @@ var (
 )
 
 // User holds a user data
-// TODO: make password private variable
 type User struct {
 	Name     string `json:"name"`
 	Title    string `json:"title"`
-	Password string `json:"password"`
+	Password string `json:"password"` // omitted from API
 	Email    string `json:"email"`
 }
 
 // ListUsers all users
 func ListUsers() []string {
-	files, err := ioutil.ReadDir(dataPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var result []string
-
-	for _, f := range files {
-		// Do not expose any non-JSON files
-		basename := f.Name()
-		if path.Ext(basename) == dataExt {
-			basename = strings.TrimSuffix(basename, filepath.Ext(basename))
-			result = append(result, basename)
-		}
-	}
-
-	return result
+	return utils.ListFilesByExtension(userPath, dataExt)
 }
 
 // GetUser by it's login (filename)
 func GetUser(login string) (User, error) {
-
-	path := dataPath + login + dataExt
+	path := userPath + login + dataExt
 
 	// Check if file exists
 	if _, err := os.Stat(path); os.IsNotExist(err) {
