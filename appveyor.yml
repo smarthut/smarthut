@@ -10,7 +10,7 @@ init:
   - go version
   - go env
 
-clone_folder: c:\gopath\src\ithub.com\leonidboykov\smarthut
+clone_folder: c:\gopath\src\github.com\leonidboykov\smarthut
 
 environment:
   GOPATH: c:\gopath
