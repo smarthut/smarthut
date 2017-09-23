@@ -1,6 +1,6 @@
 # A Self-Documenting Makefile: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 
-PACKAGE := gitlab.com/leonidboykov/smarthome
+PACKAGE := github.com/leonidboykov/smarthut
 
 GOEXE ?= go
 
@@ -12,11 +12,11 @@ vendor: ## Install deps and sync vendored dependencies
 	@${GOEXE} get -u github.com/golang/dep/cmd/dep
 	@dep ensure
 
-build: vendor ## Build smarthome binary
-	@echo "Building smarthome binary"
+build: vendor ## Build smarthut binary
+	@echo "Building smarthut binary"
 	@${GOEXE} build ${PACKAGE}
 
-docker: ## Build smarthome Docker image (not implemented)
+docker: ## Build smarthut Docker image (not implemented)
 	@echo "Building Docker image"
 	@echo "Not implemented yet!"
 
