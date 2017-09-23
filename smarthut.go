@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/leonidboykov/smarthut/router"
+	"github.com/smarthut/smarthut/router"
 )
 
 func main() {

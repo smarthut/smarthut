@@ -8,7 +8,7 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/leonidboykov/smarthut/utils"
+	"github.com/smarthut/smarthut/utils"
 )
 
 const (

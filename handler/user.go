@@ -6,7 +6,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 
-	"github.com/leonidboykov/smarthut/model"
+	"github.com/smarthut/smarthut/model"
 )
 
 type omit bool

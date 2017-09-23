@@ -9,8 +9,8 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/jwtauth"
-	"github.com/leonidboykov/smarthut/handler"
-	"github.com/leonidboykov/smarthut/model"
+	"github.com/smarthut/smarthut/handler"
+	"github.com/smarthut/smarthut/model"
 )
 
 var tokenAuth *jwtauth.JwtAuth
