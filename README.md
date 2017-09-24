@@ -15,7 +15,7 @@ devices and collect data from they.
   * User management
   * Secure access
   * Responsive dashboard
-  * Docker images
+  * 🐋 Docker images
   * Granny-friendly interface
 
 ### Available drivers
