@@ -11,12 +11,12 @@ devices and collect data from they.
 
 ## ~~Features~~ Roadmap
 
-  * Support multiple devices
-  * User management
-  * Secure access
-  * Responsive dashboard
-  * 🐋 Docker images
-  * Granny-friendly interface
+* Support multiple devices
+* User management
+* Secure access
+* Responsive dashboard
+* :whale: Docker images
+* Granny-friendly interface
 
 ### Available drivers
 
