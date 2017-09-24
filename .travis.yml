@@ -7,7 +7,7 @@ before_install:
 
 script:
   - make build
-  - chmod +x test.sh && ./test.sh
+  - chmod +x coverage.sh && ./coverage.sh
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
