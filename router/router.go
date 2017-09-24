@@ -46,6 +46,17 @@ func Initialize() http.Handler {
 			r.Route("/sensor", func(r chi.Router) {
 				r.Get("/", handler.ListSensors)
 			})
+
+			// Device router
+			r.Route("/device", func(r chi.Router) {
+				r.Get("/", handler.ListSensors)
+				r.Get("/{name}", handler.ListSensors)
+
+				r.Route("/{name}/socket", func(r chi.Router) {
+					r.Get("/", handler.ListSensors)
+					r.Get("/{num}", handler.ListSensors)
+				})
+			})
 		})
 	})
 
