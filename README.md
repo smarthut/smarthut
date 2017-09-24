@@ -18,12 +18,12 @@ devices and collect data from they.
 * :whale: Docker images
 * Granny-friendly interface
 
-### Available drivers
+## Available drivers
 
 * [laurent112](device/laurent112)
 * [megad328](device/megad328)
 
-### Acknowledgements
+## Acknowledgements
 
 * [Chi](https://github.com/go-chi/chi)
 
