@@ -5,7 +5,7 @@ latest firmware.
 
 You can use this `megad328` as standalone package
 
-    go get github.com/leonidboykov/device/megad328
+    go get github.com/smarthut/smarthut/device/megad328
 
 ## License
 

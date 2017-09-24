@@ -20,12 +20,12 @@ devices and collect data from they.
 
 ### Available drivers
 
-  * [laurent112](device/laurent112)
-  * [megad328](device/megad328)
+* [laurent112](device/laurent112)
+* [megad328](device/megad328)
 
-## Acknowledgements
+### Acknowledgements
 
-  * [Chi](https://github.com/go-chi/chi)
+* [Chi](https://github.com/go-chi/chi)
 
 ## License
 
