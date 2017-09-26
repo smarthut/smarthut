@@ -20,7 +20,7 @@ devices and collect data from they.
 
 ## Available drivers
 
-* [laurent112](device/laurent112)
+* [github.com/smarthut/laurent112](https://github.com/smarthut/laurent112)
 * [megad328](device/megad328)
 
 ## Acknowledgements
