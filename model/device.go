@@ -22,6 +22,8 @@ type Device struct {
 
 // Driver defines abstract device driver
 type Driver interface {
+	New()
+	Name()
 	Get()
 	Set()
 }
