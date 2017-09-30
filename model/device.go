@@ -2,11 +2,8 @@ package model
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
-
-	"github.com/smarthut/laurent112"
 )
 
 const (
@@ -63,6 +60,4 @@ func NewDevice(id string) (Device, error) {
 }
 
 func init() {
-	l := laurent112.New("192.168.1.101")
-	fmt.Println(l.DeviceName)
 }

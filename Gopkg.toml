@@ -20,7 +20,3 @@
 [[constraint]]
   name = "github.com/go-chi/render"
   version = "1.0.0"
-
-[[constraint]]
-  name = "github.com/smarthut/laurent112"
-  version = "1.0.0"
