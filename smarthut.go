@@ -1,11 +1,10 @@
 package main
 
 import (
-	"net/http"
-
-	"github.com/smarthut/smarthut/router"
+	"github.com/smarthut/smarthut/model"
 )
 
 func main() {
-	http.ListenAndServe(":8080", router.Initialize())
+	model.InitializeDevices()
+	// http.ListenAndServe(":8080", router.Initialize())
 }

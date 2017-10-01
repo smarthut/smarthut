@@ -3,7 +3,11 @@ package model
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"os"
+	"time"
+
+	"github.com/smarthut/smarthut/utils"
 )
 
 const (
@@ -13,26 +17,23 @@ const (
 
 // Device holds abstract device data
 type Device struct {
-	Name     string   `json:"name"`
-	Driver   string   `json:"driver"`
-	Host     string   `json:"host"`
-	Password string   `json:"password,omitempty"`
-	Sockets  []Socket `json:"sockets"`
+	host      string
+	UpdatedAt time.Time `json:"updated_at"`
+	Sockets   []Socket  `json:"sockets"`
 }
 
-// Driver defines abstract device driver
-type Driver interface {
-	New()
-	Name()
-	Get()
-	Set()
-}
+var deviceList map[string]Device
 
 // Socket holds abstract socket data
 type Socket struct {
-	ID          int    `json:"id"`
-	Type        string `json:"type"`        // type string representation, i.e. for providing proper icons
-	Description string `json:"description"` // human readable socket description
+	Value []interface{} `json:"value"`
+	*SocketInfo
+}
+
+// SocketInfo ...
+type SocketInfo struct {
+	Type     string `json:"type"`     // type string representation, i.e. for providing proper icons
+	Location string `json:"location"` // human readable socket description
 }
 
 // NewDevice creates new device
@@ -59,5 +60,22 @@ func NewDevice(id string) (Device, error) {
 	return d, nil
 }
 
-func init() {
+// GetDevice returns struct with
+func GetDevice(name string) {
+
+}
+
+// InitializeDevices ...
+func InitializeDevices() {
+	deviceList = make(map[string]Device)
+	deviceNames := utils.ListFilesByExtension(devicePath, dataExt)
+
+	for _, deviceName := range deviceNames {
+		d, err := NewDevice(deviceName)
+		if err != nil {
+			log.Println(err)
+		}
+		log.Printf("added device %s with %d sockets", deviceName, len(d.Sockets))
+		deviceList[deviceName] = d
+	}
 }

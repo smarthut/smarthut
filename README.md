@@ -1,4 +1,7 @@
 # Smart Hut [WIP]
+
+![SmartHut](docs/smarthut.png)
+
 [![GoDoc](https://godoc.org/github.com/smarthut/smarthut?status.svg)](https://godoc.org/github.com/smarthut/smarthut)
 [![Build Status](https://travis-ci.org/smarthut/smarthut.svg?branch=master)](https://travis-ci.org/smarthut/smarthut)
 [![Build status](https://ci.appveyor.com/api/projects/status/1lxy34tblt2y4ax8?svg=true)](https://ci.appveyor.com/project/leonidboykov/smarthut)

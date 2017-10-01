@@ -55,6 +55,7 @@ func Initialize() http.Handler {
 				r.Route("/{name}/socket", func(r chi.Router) {
 					r.Get("/", handler.ListSensors)
 					r.Get("/{num}", handler.ListSensors)
+					r.Post("/{num}", handler.ListSensors)
 				})
 			})
 		})
