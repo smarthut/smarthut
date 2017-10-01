@@ -24,10 +24,6 @@ func Initialize() http.Handler {
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Recoverer)
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "index.html")
-	})
-
 	// Protected routes
 	r.Group(func(r chi.Router) {
 		// Seek, verify and validate JWT tokens
@@ -42,9 +38,16 @@ func Initialize() http.Handler {
 				r.Get("/{username}", handler.GetUser)
 			})
 
-			// Sensor routes
-			r.Route("/sensor", func(r chi.Router) {
-				r.Get("/", handler.ListSensors)
+			// Device router
+			r.Route("/device", func(r chi.Router) {
+				r.Get("/", handler.ListDevices)
+				r.Get("/{devicename}", handler.GetDevice)
+
+				r.Route("/{devicename}/socket", func(r chi.Router) {
+					r.Get("/", handler.ListSockets)
+					r.Get("/{num}", handler.GetSocket)
+					r.Post("/{num}", handler.GetSocket)
+				})
 			})
 		})
 	})

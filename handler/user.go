@@ -19,22 +19,19 @@ func ListUsers(w http.ResponseWriter, r *http.Request) {
 // GetUser returns user
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	login := chi.URLParam(r, "username")
-	u, err := model.GetUser(login)
 
+	u, err := model.GetUser(login)
 	if err != nil {
-		render.JSON(w, r, struct {
-			Err string `json:"error"`
-		}{
-			Err: err.Error(),
-		})
-	} else {
-		render.JSON(w, r, &struct {
-			*model.User
-			ID       string `json:"id"`
-			Password omit   `json:"password,omitempty"`
-		}{
-			User: &u,
-			ID:   login,
-		})
+		render.JSON(w, r, Error{err.Error()})
+		return
 	}
+
+	render.JSON(w, r, &struct {
+		*model.User
+		ID       string `json:"id"`
+		Password omit   `json:"password,omitempty"`
+	}{
+		User: &u,
+		ID:   login,
+	})
 }
