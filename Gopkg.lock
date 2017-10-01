@@ -24,20 +24,14 @@
   version = "v1.0.0"
 
 [[projects]]
-  name = "github.com/smarthut/laurent112"
-  packages = ["."]
-  revision = "a0feddc944807ee44ac97bc1749b43eab34cd4a1"
-  version = "v1.0.0"
-
-[[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["bcrypt","blowfish"]
-  revision = "7d9177d70076375b9a59c8fde23d52d9c4a7ecd5"
+  revision = "9419663f5a44be8b34ca85f08abc5fe1be11f8a3"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "71a9814c3349dba2c038d57ae66bd16e85bacd22873762d0e8d40eb505e59959"
+  inputs-digest = "0c5148ffe74d4358ac8d6b043472aac668e183fb2f0e78f6e8fe5fbd79b8a5d0"
   solver-name = "gps-cdcl"
   solver-version = 1
