@@ -19,7 +19,7 @@ const (
 
 // Device holds abstract device data
 type Device struct {
-	host      string
+	Host      string    `json:"host"`
 	UpdatedAt time.Time `json:"updated_at"`
 	Sockets   []Socket  `json:"sockets"`
 }
@@ -63,11 +63,31 @@ func NewDevice(id string) (Device, error) {
 }
 
 func (d *Device) update() error {
-	resp, err := http.Get(d.host)
+	resp, err := http.Get(d.Host)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
 
+	// TODO: rewrite this part
+	var tempDevice Device
+
+	err = json.Unmarshal(body, &tempDevice)
+	if err != nil {
+		return err
+	}
+
+	d.UpdatedAt = tempDevice.UpdatedAt
+	for i := range tempDevice.Sockets {
+		d.Sockets[i].Value = tempDevice.Sockets[i].Value
+	}
+
+	return nil
 }
 
 // GetDevice returns struct with
@@ -76,6 +96,15 @@ func GetDevice(name string) (Device, error) {
 		return device, nil
 	}
 	return Device{}, fmt.Errorf("smarthome: no device `%s` found", name)
+}
+
+// ListDevices returns device list
+func ListDevices() []string {
+	names := make([]string, 0, len(deviceList))
+	for value := range deviceList {
+		names = append(names, value)
+	}
+	return names
 }
 
 // InitializeDevices ...
