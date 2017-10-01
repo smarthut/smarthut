@@ -14,11 +14,7 @@ vendor: ## Install deps and sync vendored dependencies
 
 build: vendor ## Build smarthut binary
 	@echo "Building smarthut binary"
-	@${GOEXE} build ${PACKAGE}
-
-docker: ## Build smarthut Docker image (not implemented)
-	@echo "Building Docker image"
-	@echo "Not implemented yet!"
+	@CGO_ENABLED=0 GOOS=linux ${GOEXE} build -a -installsuffix cgo ${PACKAGE}
 
 test: ## Run tests
 	@${GOEXE} test

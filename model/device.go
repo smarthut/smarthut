@@ -2,8 +2,10 @@ package model
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"time"
 
@@ -60,9 +62,20 @@ func NewDevice(id string) (Device, error) {
 	return d, nil
 }
 
-// GetDevice returns struct with
-func GetDevice(name string) {
+func (d *Device) update() error {
+	resp, err := http.Get(d.host)
+	if err != nil {
+		return err
+	}
 
+}
+
+// GetDevice returns struct with
+func GetDevice(name string) (Device, error) {
+	if device, ok := deviceList[name]; ok {
+		return device, nil
+	}
+	return Device{}, fmt.Errorf("smarthome: no device `%s` found", name)
 }
 
 // InitializeDevices ...
@@ -74,6 +87,7 @@ func InitializeDevices() {
 		d, err := NewDevice(deviceName)
 		if err != nil {
 			log.Println(err)
+			continue
 		}
 		log.Printf("added device %s with %d sockets", deviceName, len(d.Sockets))
 		deviceList[deviceName] = d
