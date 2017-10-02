@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -22,6 +23,7 @@ func GetDevice(w http.ResponseWriter, r *http.Request) {
 	d, err := model.GetDevice(name)
 	if err != nil {
 		render.JSON(w, r, Error{err.Error()})
+		log.Println(err)
 		return
 	}
 
@@ -35,6 +37,7 @@ func ListSockets(w http.ResponseWriter, r *http.Request) {
 	d, err := model.GetDevice(name)
 	if err != nil {
 		render.JSON(w, r, Error{err.Error()})
+		log.Println(err)
 		return
 	}
 
@@ -48,11 +51,13 @@ func GetSocket(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		render.JSON(w, r, Error{err.Error()})
+		log.Println(err)
 		return
 	}
 
 	if err != nil {
 		render.JSON(w, r, Error{err.Error()})
+		log.Println(err)
 		return
 	}
 
@@ -60,6 +65,7 @@ func GetSocket(w http.ResponseWriter, r *http.Request) {
 	i, err := strconv.Atoi(num)
 	if err != nil {
 		render.JSON(w, r, Error{err.Error()})
+		log.Println(err)
 	}
 
 	if i < 0 || i >= len(d.Sockets) {

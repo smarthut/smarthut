@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -23,6 +24,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	u, err := model.GetUser(login)
 	if err != nil {
 		render.JSON(w, r, Error{err.Error()})
+		log.Println(err)
 		return
 	}
 

@@ -28,7 +28,7 @@ var deviceList map[string]Device
 
 // Socket holds abstract socket data
 type Socket struct {
-	Value []interface{} `json:"value"`
+	Value interface{} `json:"value"`
 	*SocketInfo
 }
 
@@ -36,6 +36,11 @@ type Socket struct {
 type SocketInfo struct {
 	Type     string `json:"type"`     // type string representation, i.e. for providing proper icons
 	Location string `json:"location"` // human readable socket description
+}
+
+type deviceAPI struct {
+	UpdatedAt time.Time     `json:"updated_at"`
+	Sockets   []interface{} `json:"sockets"`
 }
 
 // NewDevice creates new device
@@ -75,7 +80,7 @@ func (d *Device) update() error {
 	}
 
 	// TODO: rewrite this part
-	var tempDevice Device
+	var tempDevice deviceAPI
 
 	err = json.Unmarshal(body, &tempDevice)
 	if err != nil {
@@ -84,7 +89,7 @@ func (d *Device) update() error {
 
 	d.UpdatedAt = tempDevice.UpdatedAt
 	for i := range tempDevice.Sockets {
-		d.Sockets[i].Value = tempDevice.Sockets[i].Value
+		d.Sockets[i].Value = tempDevice.Sockets[i]
 	}
 
 	return nil
@@ -93,6 +98,11 @@ func (d *Device) update() error {
 // GetDevice returns struct with
 func GetDevice(name string) (Device, error) {
 	if device, ok := deviceList[name]; ok {
+		err := device.update()
+		if err != nil {
+			return Device{}, err
+		}
+
 		return device, nil
 	}
 	return Device{}, fmt.Errorf("smarthome: no device `%s` found", name)
