@@ -4,7 +4,7 @@ COPY . .
 RUN make vendor
 RUN make build
 
-FROM alpine:latest
+FROM alpine:3.6
 COPY --from=builder /go/src/github.com/smarthut/smarthut/smarthut /
 EXPOSE 8080
 VOLUME ["/data"]
