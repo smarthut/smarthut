@@ -54,7 +54,7 @@ func Initialize() http.Handler {
 
 	// Public routes
 	r.Group(func(r chi.Router) {
-		r.Post("/login", authenticateHandler)
+		r.Post("/token", authenticateHandler)
 	})
 
 	return r
