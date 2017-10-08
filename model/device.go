@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	devicePath = "./data/devices/"
+	devicePath = "/data/devices/"
 	// dataExt    = ".json"
 )
 

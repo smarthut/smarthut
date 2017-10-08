@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	userPath = "./data/users/"
+	userPath = "/data/users/"
 	dataExt  = ".json"
 )
 
