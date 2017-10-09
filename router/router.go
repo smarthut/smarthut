@@ -46,7 +46,7 @@ func Initialize() http.Handler {
 				r.Route("/{devicename}/socket", func(r chi.Router) {
 					r.Get("/", handler.ListSockets)
 					r.Get("/{num}", handler.GetSocket)
-					r.Post("/{num}", handler.GetSocket)
+					r.Post("/{num}", handler.SetSocket)
 				})
 			})
 		})
