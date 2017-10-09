@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"path"
 	"strconv"
 
 	"github.com/go-chi/chi"
@@ -95,7 +94,7 @@ func SetSocket(w http.ResponseWriter, r *http.Request) {
 	}
 
 	body := bytes.NewBufferString(r.Form.Encode())
-	resp, err := http.Post(path.Join(d.Host, num), "application/x-www-form-urlencoded", body)
+	resp, err := http.Post(d.Host+"/"+num, "application/x-www-form-urlencoded", body)
 	if err != nil {
 		render.JSON(w, r, model.Message{Msg: err.Error()})
 		log.Println(err)
