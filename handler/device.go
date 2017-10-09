@@ -93,6 +93,7 @@ func SetSocket(w http.ResponseWriter, r *http.Request) {
 		render.JSON(w, r, model.Message{Msg: fmt.Sprintf("smarthome: there is no socket#%d in %s", i, name)})
 	}
 
+	r.ParseForm()
 	body := bytes.NewBufferString(r.Form.Encode())
 	resp, err := http.Post(d.Host+"/"+num, "application/x-www-form-urlencoded", body)
 	if err != nil {
