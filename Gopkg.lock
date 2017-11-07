@@ -4,18 +4,20 @@
 [[projects]]
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
-  revision = "a539ee1a749a2b895533f979515ac7e6e0f5b650"
+  revision = "dbeaa9332f19a944acb5736b4456cfcc02140e29"
+  version = "v3.1.0"
 
 [[projects]]
   name = "github.com/go-chi/chi"
   packages = [".","middleware"]
-  revision = "04ec7fc4179604b2390947258f9143eaae23b596"
-  version = "v3.2.1"
+  revision = "f7c66f685bcab06bcce78ac212c5f3553c063d19"
+  version = "v3.3.0"
 
 [[projects]]
   name = "github.com/go-chi/jwtauth"
   packages = ["."]
-  revision = "89031fb71dd3b0a94441f1e830abfd2f9606b44b"
+  revision = "34cf10b6ac177a2112da93be5c0aac45c100c448"
+  version = "v3.1.1"
 
 [[projects]]
   name = "github.com/go-chi/render"
@@ -27,11 +29,11 @@
   branch = "master"
   name = "golang.org/x/crypto"
   packages = ["bcrypt","blowfish"]
-  revision = "9419663f5a44be8b34ca85f08abc5fe1be11f8a3"
+  revision = "687d4b818545e443c8ba223cbef20b1721afd4db"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "0c5148ffe74d4358ac8d6b043472aac668e183fb2f0e78f6e8fe5fbd79b8a5d0"
+  inputs-digest = "a4d95175a673f99bcc504b09532dd0e35544ffdf72c35f45aaedb1371ca3bb53"
   solver-name = "gps-cdcl"
   solver-version = 1
