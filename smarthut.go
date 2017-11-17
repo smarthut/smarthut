@@ -9,5 +9,5 @@ import (
 
 func main() {
 	model.InitializeDevices()
-	http.ListenAndServe(":8080", router.Initialize())
+	http.ListenAndServe(":8080", router.New())
 }

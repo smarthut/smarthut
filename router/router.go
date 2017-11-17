@@ -15,8 +15,8 @@ import (
 
 var tokenAuth *jwtauth.JwtAuth
 
-// Initialize routes
-func Initialize() http.Handler {
+// New initializes routes
+func New() http.Handler {
 	tokenAuth = jwtauth.New("HS256", []byte("secret"), nil)
 
 	r := chi.NewRouter()
@@ -27,8 +27,8 @@ func Initialize() http.Handler {
 	// Protected routes
 	r.Group(func(r chi.Router) {
 		// Seek, verify and validate JWT tokens
-		r.Use(jwtauth.Verifier(tokenAuth))
-		r.Use(jwtauth.Authenticator)
+		// r.Use(jwtauth.Verifier(tokenAuth))
+		// r.Use(jwtauth.Authenticator)
 
 		// APIv2 routes
 		r.Route("/api/v2", func(r chi.Router) {
