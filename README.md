@@ -6,7 +6,7 @@ SmartHut is the lightweight smarthome service implementation. The goal of the
 project is to provide simple admin and some scripting tools to control various
 devices and collect data from they.
 
-## ~~Features~~ Roadmap
+## Roadmap
 
 * Support multiple devices
 * User management
@@ -14,11 +14,6 @@ devices and collect data from they.
 * Responsive dashboard
 * :whale: Docker images
 * Granny-friendly interface
-
-## Available drivers
-
-* [github.com/smarthut/laurent112](https://github.com/smarthut/laurent112)
-* [github.com/smarthut/megad328](https://github.com/smarthut/megad328)
 
 ## Acknowledgements
 
