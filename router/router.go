@@ -8,7 +8,9 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth"
+
 	"github.com/smarthut/smarthut/handler"
 	"github.com/smarthut/smarthut/model"
 )
@@ -21,8 +23,19 @@ func New() http.Handler {
 
 	r := chi.NewRouter()
 
+	cors := cors.New(cors.Options{
+		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	})
+
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Recoverer)
+	r.Use(cors.Handler)
 
 	// Protected routes
 	r.Group(func(r chi.Router) {
