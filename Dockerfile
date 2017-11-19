@@ -1,4 +1,4 @@
-FROM golang:alpine as builder
+FROM golang:1.9 as builder
 WORKDIR /go/src/github.com/smarthut/smarthut
 COPY . .
 RUN make vendor ; make build
