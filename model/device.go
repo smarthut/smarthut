@@ -92,6 +92,15 @@ func (d *Device) update() error {
 		d.Sockets[i].Value = tempDevice.Sockets[i]
 	}
 
+	tz := os.Getenv("TIMEZONE")
+	if tz != "" {
+		loc, err := time.LoadLocation(tz)
+		if err != nil {
+			return err
+		}
+		d.UpdatedAt = d.UpdatedAt.In(loc)
+	}
+
 	return nil
 }
 

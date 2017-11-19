@@ -30,8 +30,8 @@ func New() http.Handler {
 		// r.Use(jwtauth.Verifier(tokenAuth))
 		// r.Use(jwtauth.Authenticator)
 
-		// APIv2 routes
-		r.Route("/api/v2", func(r chi.Router) {
+		// APIv1 routes
+		r.Route("/api/v1", func(r chi.Router) {
 			// User routes
 			r.Route("/user", func(r chi.Router) {
 				r.Get("/", handler.ListUsers)
