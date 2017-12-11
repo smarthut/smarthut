@@ -15,7 +15,7 @@ import (
 	"github.com/smarthut/smarthut/model"
 )
 
-var tokenAuth *jwtauth.JwtAuth
+var tokenAuth *jwtauth.JWTAuth
 
 // New initializes routes
 func New() http.Handler {
@@ -54,12 +54,9 @@ func New() http.Handler {
 			// Device router
 			r.Route("/device", func(r chi.Router) {
 				r.Get("/", handler.ListDevices)
-				r.Get("/{devicename}", handler.GetDevice)
-
-				r.Route("/{devicename}/socket", func(r chi.Router) {
-					r.Get("/", handler.ListSockets)
-					r.Get("/{num}", handler.GetSocket)
-					r.Post("/{num}", handler.SetSocket)
+				r.Route("/{devicename}", func(r chi.Router) {
+					r.Get("/", handler.GetDevice)
+					r.Post("/socket", handler.SetSocket)
 				})
 			})
 		})

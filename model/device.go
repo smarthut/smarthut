@@ -104,7 +104,7 @@ func (d *Device) update() error {
 	return nil
 }
 
-// GetDevice returns struct with
+// GetDevice returns struct with device data
 func GetDevice(name string) (Device, error) {
 	if device, ok := deviceList[name]; ok {
 		err := device.update()
