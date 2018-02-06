@@ -8,8 +8,8 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth"
+	"github.com/rs/cors"
 
 	"github.com/smarthut/smarthut/handler"
 	"github.com/smarthut/smarthut/model"
@@ -26,7 +26,7 @@ func New() http.Handler {
 	cors := cors.New(cors.Options{
 		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
 		AllowedOrigins:   []string{"*"},
-		AllowedMethods:   []string{"GET", "POST"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
@@ -54,6 +54,9 @@ func New() http.Handler {
 			// Device router
 			r.Route("/device", func(r chi.Router) {
 				r.Get("/", handler.ListDevices)
+				// TODO: add POST   to CREATE device
+				// TODO: add PUT    to UPDATE device
+				// TODO: add DELETE to REMOVE device
 				r.Route("/{devicename}", func(r chi.Router) {
 					r.Get("/", handler.GetDevice)
 					r.Post("/socket", handler.SetSocket)
