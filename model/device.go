@@ -68,7 +68,7 @@ func NewDevice(id string) (Device, error) {
 }
 
 func (d *Device) update() error {
-	resp, err := http.Get(d.Host)
+	resp, err := http.Get(fmt.Sprintf("%s/api/v1", d.Host))
 	if err != nil {
 		return err
 	}

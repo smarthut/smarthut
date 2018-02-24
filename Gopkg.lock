@@ -9,7 +9,10 @@
 
 [[projects]]
   name = "github.com/go-chi/chi"
-  packages = [".","middleware"]
+  packages = [
+    ".",
+    "middleware"
+  ]
   revision = "e83ac2304db3c50cf03d96a2fcd39009d458bc35"
   version = "v3.3.2"
 
@@ -26,20 +29,29 @@
   version = "v1.0.0"
 
 [[projects]]
+  name = "github.com/joho/godotenv"
+  packages = ["."]
+  revision = "a79fa1e548e2c689c241d10173efd51e5d689d5b"
+  version = "v1.2.0"
+
+[[projects]]
   name = "github.com/rs/cors"
   packages = ["."]
-  revision = "7af7a1e09ba336d2ea14b1ce73bf693c6837dbf6"
-  version = "v1.2"
+  revision = "feef513b9575b32f84bafa580aad89b011259019"
+  version = "v1.3.0"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["bcrypt","blowfish"]
-  revision = "1875d0a70c90e57f11972aefd42276df65e895b9"
+  packages = [
+    "bcrypt",
+    "blowfish"
+  ]
+  revision = "49796115aa4b964c318aad4f3084fdb41e9aa067"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "7c2db0bbab7f8fe79099edfb626e1a384bb6001ff3f599e5692b6eedb6a99703"
+  inputs-digest = "d96921f3fe54d45f7aaa0ef42ac537a3bd7b921f597c2a728f2103a1e16faedb"
   solver-name = "gps-cdcl"
   solver-version = 1

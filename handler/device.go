@@ -40,7 +40,7 @@ func SetSocket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := http.Post(d.Host+"/socket", "application/json; charset=utf-8", r.Body)
+	resp, err := http.Post(d.Host+"/api/v1/socket", "application/json; charset=utf-8", r.Body)
 	if err != nil {
 		render.JSON(w, r, model.Message{Msg: err.Error()})
 		log.Println(err)
