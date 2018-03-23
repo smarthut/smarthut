@@ -1,19 +1,29 @@
 language: go
 go:
-  - "1.10"
-  - tip
+  - "1.10.x"
 
-matrix:
-  allow_failures:
-    - go: tip
-  fast_finish: true
+services:
+  - docker
 
-before_install:
-  - make vendor
+install:
+  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+  - dep ensure
 
 script:
-  - make build
-  - ./coverage.sh
+  - make ci
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  - test -n "$TRAVIS_TAG" && docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: curl -sL http://git.io/goreleaser | bash
+    on:
+      repo: smarthut/smarthut
+      tags: true
+      condition: $TRAVIS_OS_NAME = linux
+
+notifications:
+  email: false
