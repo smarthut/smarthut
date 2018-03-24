@@ -19,10 +19,6 @@ devices and collect data from they.
 * :whale: Docker images
 * Granny-friendly interface
 
-## Acknowledgements
-
-* [Chi](https://github.com/go-chi/chi)
-
 ## License
 
 This package is licensed under the [MIT](LICENSE) license.
