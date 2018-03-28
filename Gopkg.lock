@@ -4,8 +4,8 @@
 [[projects]]
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
-  revision = "dbeaa9332f19a944acb5736b4456cfcc02140e29"
-  version = "v3.1.0"
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
 
 [[projects]]
   name = "github.com/go-chi/chi"
@@ -19,8 +19,8 @@
 [[projects]]
   name = "github.com/go-chi/jwtauth"
   packages = ["."]
-  revision = "fdeab96f74da4a5f7e08329133192737795d9ec9"
-  version = "v3.2.0"
+  revision = "53a0a4877a0ead48e149be6b4ec9dd1b3c075eba"
+  version = "v3.3.0"
 
 [[projects]]
   name = "github.com/go-chi/render"
@@ -47,7 +47,7 @@
     "bcrypt",
     "blowfish"
   ]
-  revision = "49796115aa4b964c318aad4f3084fdb41e9aa067"
+  revision = "88942b9c40a4c9d203b82b3731787b672d6e809b"
 
 [solve-meta]
   analyzer-name = "dep"
