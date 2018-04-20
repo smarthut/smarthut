@@ -36,7 +36,7 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 	r := chi.NewRouter()
 
 	cors := cors.New(cors.Options{
-		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
+		// AllowedOrigins:   []string{config.API.Host},
 		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
@@ -58,13 +58,16 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 		// APIv1 routes
 		r.Route("/api/v1", func(r chi.Router) {
 			// User routes
-			// r.Route("/user", func(r chi.Router) {
-			// 	r.Get("/", handler.ListUsers)
-			// 	r.Get("/{username}", handler.GetUser)
-			// })
-
+			r.Route("/user", func(r chi.Router) {
+				r.Get("/", api.listUsers)
+				r.Post("/", api.createUser)
+				r.Route("/{login}", func(r chi.Router) {
+					r.Get("/", api.getUser)
+					r.Put("/", api.updateUser)
+					r.Delete("/", api.deleteUser)
+				})
+			})
 			// Device router
-			r.Get("/devices", api.listDevices)
 			r.Route("/device", func(r chi.Router) {
 				r.Get("/", api.listDevices)
 				r.Post("/", api.createDevice)
@@ -72,8 +75,7 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 					r.Get("/", api.getDevice)
 					r.Put("/", api.updateDevice)
 					r.Delete("/", api.deleteDevice)
-
-					// Device socket operations
+					// Socket operations
 					r.Route("/socket", func(r chi.Router) {
 						r.Get("/", api.getSocket)
 						r.Post("/", api.setSocket)
