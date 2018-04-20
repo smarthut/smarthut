@@ -17,21 +17,20 @@ var tests = []testpair{
 }
 
 func TestValidate(t *testing.T) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte("myP@44w0rd!"), bcrypt.DefaultCost)
+	pw, err := bcrypt.GenerateFromPassword([]byte("myP@44w0rd!"), bcrypt.DefaultCost)
 	if err != nil {
 		t.Error(err)
 	}
 
-	u := User{Password: string(hashedPassword)}
+	u := User{Password: string(pw)}
 
 	for _, pair := range tests {
-		err := u.Validate(pair.value)
-		v := err == nil
-		if v != pair.result {
+		res := u.Authenticate(pair.value)
+		if res != pair.result {
 			t.Error(
 				"For", pair.value,
 				"expected", pair.result,
-				"got", v,
+				"got", res,
 			)
 		}
 	}
