@@ -1,6 +1,7 @@
 package handler
 
-// // ListDevices all devices
+
+// ListDevices all devices
 // func ListDevices(w http.ResponseWriter, r *http.Request) {
 // 	render.JSON(w, r, model.ListDevices())
 // }
