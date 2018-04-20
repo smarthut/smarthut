@@ -1,16 +1,9 @@
 package handler
 
-import (
-	"net/http"
-
-	"github.com/go-chi/render"
-	"github.com/smarthut/smarthut/model"
-)
-
 // ListDevices all devices
-func ListDevices(w http.ResponseWriter, r *http.Request) {
-	render.JSON(w, r, model.ListDevices())
-}
+// func ListDevices(w http.ResponseWriter, r *http.Request) {
+// 	render.JSON(w, r, model.ListDevices())
+// }
 
 // // GetDevice ...
 // func GetDevice(w http.ResponseWriter, r *http.Request) {
