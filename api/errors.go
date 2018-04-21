@@ -9,10 +9,10 @@ import (
 
 // Message struct contains error
 type Message struct {
-	Error error `json:"error"`
+	Error string `json:"error,omitempty"`
 }
 
 func handleError(err error, w http.ResponseWriter, r *http.Request) {
 	log.Println(err)
-	render.JSON(w, r, Message{Error: err})
+	render.JSON(w, r, Message{Error: err.Error()})
 }

@@ -1,15 +1,44 @@
 package api
 
 import (
+	"context"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
+	"github.com/pkg/errors"
 
 	"github.com/smarthut/smarthut/model"
 )
+
+// DeviceResponse holds device data
+type DeviceResponse struct {
+	*model.Device
+}
+
+func (api *API) deviceCtx(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		device := new(model.Device)
+		if deviceID := chi.URLParam(r, "device_id"); deviceID != "" {
+			// skip check, we're already using regex
+			id, _ := strconv.Atoi(deviceID)
+			if err := api.db.One("ID", id, device); err != nil {
+				handleError(errors.Wrapf(err, "unable to find device with id %d", id), w, r)
+				return
+			}
+		} else if deviceName := chi.URLParam(r, "device_name"); deviceName != "" {
+			if err := api.db.One("Name", deviceName, device); err != nil {
+				handleError(errors.Wrapf(err, "unable to find device with name %s", deviceName), w, r)
+				return
+			}
+		}
+		ctx := context.WithValue(r.Context(), deviceKey, device)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
 
 func (api *API) listDevices(w http.ResponseWriter, r *http.Request) {
 	var devices []model.Device
@@ -21,8 +50,8 @@ func (api *API) listDevices(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *API) createDevice(w http.ResponseWriter, r *http.Request) {
-	var d model.Device
-	if err := render.DecodeJSON(r.Body, &d); err != nil {
+	var d *model.Device
+	if err := render.DecodeJSON(r.Body, d); err != nil {
 		handleError(err, w, r)
 		return
 	}
@@ -36,25 +65,12 @@ func (api *API) createDevice(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *API) getDevice(w http.ResponseWriter, r *http.Request) {
-	name := chi.URLParam(r, "device_name")
-
-	var d model.Device
-	if err := api.db.One("Name", name, &d); err != nil {
-		handleError(err, w, r)
-		return
-	}
-
-	render.JSON(w, r, d)
+	device := r.Context().Value(deviceKey).(*model.Device)
+	render.JSON(w, r, DeviceResponse{Device: device})
 }
 
 func (api *API) updateDevice(w http.ResponseWriter, r *http.Request) {
-	name := chi.URLParam(r, "device_name")
-
-	var d model.Device
-	if err := api.db.One("Name", name, &d); err != nil {
-		handleError(err, w, r)
-		return
-	}
+	device := r.Context().Value(deviceKey).(*model.Device)
 
 	var params model.Device
 	if err := render.DecodeJSON(r.Body, &params); err != nil {
@@ -62,7 +78,7 @@ func (api *API) updateDevice(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	params.ID = d.ID
+	params.ID = device.ID
 	params.UpdatedAt = time.Now()
 	if err := api.db.Update(&params); err != nil {
 		handleError(err, w, r)
@@ -73,31 +89,18 @@ func (api *API) updateDevice(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *API) deleteDevice(w http.ResponseWriter, r *http.Request) {
-	name := chi.URLParam(r, "device_name")
-
-	var d model.Device
-	if err := api.db.One("Name", name, &d); err != nil {
+	device := r.Context().Value(deviceKey).(*model.Device)
+	if err := api.db.DeleteStruct(&device); err != nil {
 		handleError(err, w, r)
 		return
 	}
-
-	if err := api.db.DeleteStruct(&d); err != nil {
-		handleError(err, w, r)
-		return
-	}
-
 	render.JSON(w, r, struct{}{})
 }
 
 func (api *API) getSocket(w http.ResponseWriter, r *http.Request) {
-	name := chi.URLParam(r, "device_name")
-	var d model.Device
-	if err := api.db.One("Name", name, &d); err != nil {
-		handleError(err, w, r)
-		return
-	}
+	device := r.Context().Value(deviceKey).(*model.Device)
 
-	resp, err := http.Get(d.Host + "/api/v1")
+	resp, err := http.Get(device.Host + "/api/v1")
 	if err != nil {
 		handleError(err, w, r)
 		return
@@ -113,14 +116,9 @@ func (api *API) getSocket(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *API) setSocket(w http.ResponseWriter, r *http.Request) {
-	name := chi.URLParam(r, "device_name")
-	var d model.Device
-	if err := api.db.One("Name", name, &d); err != nil {
-		handleError(err, w, r)
-		return
-	}
+	device := r.Context().Value(deviceKey).(*model.Device)
 
-	resp, err := http.Post(d.Host+"/api/v1/socket", "application/json; charset=utf-8", r.Body)
+	resp, err := http.Post(device.Host+"/api/v1/socket", "application/json; charset=utf-8", r.Body)
 	if err != nil {
 		handleError(err, w, r)
 		return
