@@ -1,7 +1,6 @@
 language: go
 go:
   - "1.10.x"
-  - master
 
 services:
   - docker
@@ -24,7 +23,6 @@ deploy:
     on:
       repo: smarthut/smarthut
       tags: true
-      go: "1.10.x"
       condition: $TRAVIS_OS_NAME = linux
 
 notifications:
