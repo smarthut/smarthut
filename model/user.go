@@ -1,14 +1,13 @@
 package model
 
 import (
-	"encoding/json"
 	"errors"
-	"io/ioutil"
-	"os"
+	"strings"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/smarthut/smarthut/utils"
+	"github.com/smarthut/smarthut/store"
 )
 
 const (
@@ -23,42 +22,49 @@ var (
 
 // User holds a user data
 type User struct {
+	Login    string `json:"login" storm:"id"` // user name
+	Password string `json:"-"`                // encrypted password
+	Email    string `json:"email" storm:"unique"`
 	Name     string `json:"name"`
-	Title    string `json:"title"`
-	Password string `json:"password"` // omitted from API
-	Email    string `json:"email"`
+	Role     string `json:"role"`
+
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// ListUsers all users
-func ListUsers() []string {
-	return utils.ListFilesByExtension(userPath, dataExt)
-}
-
-// GetUser by it's login (filename)
-func GetUser(login string) (User, error) {
-	path := userPath + login + dataExt
-
-	// Check if file exists
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return User{}, ErrNotExist
-	}
-
-	// Read related json file
-	file, err := ioutil.ReadFile(path)
+// NewUser initializes a new user from a login, email and password
+func NewUser(login, email, password string) (*User, error) {
+	pw, err := hashPassword(password)
 	if err != nil {
-		return User{}, err
+		return nil, err
 	}
-
-	var u User
-	err = json.Unmarshal(file, &u)
-	if err != nil {
-		return User{}, err
+	user := &User{
+		Login:     login,
+		Email:     email,
+		Password:  pw,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	}
-
-	return u, nil
+	return user, nil
 }
 
-// Validate checks if provided password is valid
-func (u User) Validate(password string) error {
-	return bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+// SetRole sets the users Role with roleName
+func (u *User) SetRole(db *store.DB, roleName string) error {
+	u.Role = strings.TrimSpace(roleName)
+	u.UpdatedAt = time.Now()
+	return db.UpdateField(u, "Role", u.Role)
+}
+
+// Authenticate a user from a password
+func (u *User) Authenticate(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+	return err == nil
+}
+
+func hashPassword(password string) (string, error) {
+	pw, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(pw), nil
 }

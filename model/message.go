@@ -2,5 +2,5 @@ package model
 
 // Message ...
 type Message struct {
-	Msg string `json:"message"`
+	Error string `json:"error"`
 }
