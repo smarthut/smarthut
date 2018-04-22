@@ -71,7 +71,7 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 			r.Route("/device", func(r chi.Router) {
 				r.Get("/", api.listDevices)
 				r.Post("/", api.createDevice)
-				r.Route("/{device_id}", func(r chi.Router) {
+				r.Route("/{device_name}", func(r chi.Router) {
 					r.Use(api.deviceCtx)
 					r.Get("/", api.getDevice)
 					r.Put("/", api.updateDevice)
