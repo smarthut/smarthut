@@ -4,7 +4,6 @@ import (
 	"context"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -22,14 +21,7 @@ type DeviceResponse struct {
 func (api *API) deviceCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		device := new(model.Device)
-		if deviceID := chi.URLParam(r, "device_id"); deviceID != "" {
-			// skip check, we're already using regex
-			id, _ := strconv.Atoi(deviceID)
-			if err := api.db.One("ID", id, device); err != nil {
-				handleError(errors.Wrapf(err, "unable to find device with id %d", id), w, r)
-				return
-			}
-		} else if deviceName := chi.URLParam(r, "device_name"); deviceName != "" {
+		if deviceName := chi.URLParam(r, "device_name"); deviceName != "" {
 			if err := api.db.One("Name", deviceName, device); err != nil {
 				handleError(errors.Wrapf(err, "unable to find device with name %s", deviceName), w, r)
 				return
