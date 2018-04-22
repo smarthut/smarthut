@@ -42,8 +42,8 @@ func (api *API) listDevices(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *API) createDevice(w http.ResponseWriter, r *http.Request) {
-	var d *model.Device
-	if err := render.DecodeJSON(r.Body, d); err != nil {
+	var d model.Device
+	if err := render.DecodeJSON(r.Body, &d); err != nil {
 		handleError(err, w, r)
 		return
 	}
