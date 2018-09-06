@@ -115,7 +115,7 @@ func (api *API) setSocket(w http.ResponseWriter, r *http.Request) {
 		handleError(err, w, r)
 		return
 	}
-	resp.Body.Close()
+	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

@@ -21,3 +21,7 @@ func (api *API) updateUser(w http.ResponseWriter, r *http.Request) {
 func (api *API) deleteUser(w http.ResponseWriter, r *http.Request) {
 
 }
+
+func (api *API) authenticate(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Not implemented"))
+}

@@ -84,12 +84,33 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 				})
 			})
 		})
+
+		// APIv2 routes
+		r.Route("/api/v2", func(r chi.Router) {
+			// User routes
+			r.Route("/user", func(r chi.Router) {
+				r.Get("/", api.listUsers)
+				r.Post("/", api.createUser)
+				r.Route("/{login}", func(r chi.Router) {
+					r.Get("/", api.getUser)
+					r.Put("/", api.updateUser)
+					r.Delete("/", api.deleteUser)
+				})
+			})
+			// Device routes
+			// ...
+			// Things
+			r.Route("/thing", func(r chi.Router) {
+				r.Get("/", api.listThings)
+				// ...
+			})
+		})
 	})
 
 	// Public routes
-	// r.Group(func(r chi.Router) {
-	// 	r.Post("/token", authenticateHandler)
-	// })
+	r.Group(func(r chi.Router) {
+		r.Post("/token", api.authenticate)
+	})
 
 	api.handler = r
 	return api
