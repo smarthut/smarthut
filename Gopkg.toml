@@ -1,0 +1,4 @@
+
+[[constraint]]
+  name = "github.com/volatiletech/authboss"
+  version = "2.0.0"

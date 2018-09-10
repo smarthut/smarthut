@@ -17,21 +17,21 @@ var tokenAuth *jwtauth.JWTAuth
 
 // API is the main REST API
 type API struct {
-	handler http.Handler
-	db      *store.DB
-	config  *conf.Configuration
-	version string
+	handler   http.Handler
+	db        *store.DB
+	config    *conf.Configuration
+	tokenAuth *jwtauth.JWTAuth
+	version   string
 }
 
 // NewAPI instantiates a new REST API
 func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 	api := &API{
-		config:  config,
-		db:      db,
-		version: version,
+		config:    config,
+		db:        db,
+		tokenAuth: jwtauth.New("HS256", []byte(config.JWT.Secret), nil),
+		version:   version,
 	}
-
-	tokenAuth = jwtauth.New("HS256", []byte("secret"), nil)
 
 	r := chi.NewRouter()
 
@@ -109,7 +109,15 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 
 	// Public routes
 	r.Group(func(r chi.Router) {
-		r.Post("/token", api.authenticate)
+		r.Post("/auth", api.authenticate)
+	})
+
+	r.Group(func(r chi.Router) {
+		r.Use(jwtauth.Verifier(api.tokenAuth))
+		r.Use(jwtauth.Authenticator)
+		r.Get("/token", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("welcome, mr.user"))
+		})
 	})
 
 	api.handler = r

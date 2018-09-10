@@ -32,7 +32,4 @@ func main() {
 	l := fmt.Sprintf("%s:%d", config.API.Host, config.API.Port)
 	log.Printf("Starting SmartHut Service %s on %s\n", version, l)
 	api.Start(l)
-
-	// model.InitializeDevices()
-	// http.ListenAndServe(":8080", router.New())
 }

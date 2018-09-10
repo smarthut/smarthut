@@ -22,8 +22,9 @@ var (
 
 // User holds a user data
 type User struct {
-	Login    string `json:"login" storm:"id"` // user name
-	Password string `json:"-"`                // encrypted password
+	ID       int    `json:"id" storm:"id,increment"` // user id
+	Username string `json:"username" storm:"unique"` // user name
+	Password string `json:"-"`                       // encrypted password
 	Email    string `json:"email" storm:"unique"`
 	Name     string `json:"name"`
 	Role     string `json:"role"`
@@ -32,14 +33,20 @@ type User struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// NewUser initializes a new user from a login, email and password
-func NewUser(login, email, password string) (*User, error) {
+// Credentials holds credential data
+type Credentials struct {
+	Login    string `json:"login"`    // Username or Email
+	Password string `json:"password"` // Password
+}
+
+// NewUser initializes a new user from a username, email and password
+func NewUser(username, email, password string) (*User, error) {
 	pw, err := hashPassword(password)
 	if err != nil {
 		return nil, err
 	}
 	user := &User{
-		Login:     login,
+		Username:  username,
 		Email:     email,
 		Password:  pw,
 		CreatedAt: time.Now(),
