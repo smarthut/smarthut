@@ -112,45 +112,23 @@
   version = "v4.0.0"
 
 [[projects]]
-  digest = "1:7c06e2f348258bdac3c0c199a431d446a60a2c1810c5ace7ea47e403948b25b3"
-  name = "github.com/volatiletech/authboss"
-  packages = ["."]
-  pruneopts = ""
-  revision = "98147bc020df3bc101817c23d2b31d90f9a2f696"
-  version = "v2.0.0"
-
-[[projects]]
   branch = "master"
-  digest = "1:b2d8b39397ca07929a3de3a3fd2b6ca4c8d48e9cadaa7cf2b083e27fd9e78107"
+  digest = "1:61a86f0be8b466d6e3fbdabb155aaa4006137cb5e3fd3b949329d103fa0ceb0f"
   name = "golang.org/x/crypto"
   packages = [
     "bcrypt",
     "blowfish",
   ]
   pruneopts = ""
-  revision = "0709b304e793a5edb4a2c0145f281ecdc20838a4"
+  revision = "0e37d006457bf46f9e6692014ba72ef82c33022c"
 
 [[projects]]
   branch = "master"
   digest = "1:782723d6fc27d202f1943219d68d58b3f6bcab6212c85294b1ddd8b586b1d356"
   name = "golang.org/x/net"
-  packages = [
-    "context",
-    "context/ctxhttp",
-  ]
+  packages = ["context"]
   pruneopts = ""
   revision = "161cd47e91fd58ac17490ef4d742dc98bb4cf60e"
-
-[[projects]]
-  branch = "master"
-  digest = "1:b697592485cb412be4188c08ca0beed9aab87f36b86418e21acc4a3998f63734"
-  name = "golang.org/x/oauth2"
-  packages = [
-    ".",
-    "internal",
-  ]
-  pruneopts = ""
-  revision = "d2e6202438beef2727060aa7cabdd924d92ebfd9"
 
 [[projects]]
   branch = "master"
@@ -173,8 +151,6 @@
     "internal/log",
     "internal/modules",
     "internal/remote_api",
-    "internal/urlfetch",
-    "urlfetch",
   ]
   pruneopts = ""
   revision = "b1f26356af11148e710935ed1ac8a7f5702c7612"
@@ -186,6 +162,7 @@
   input-imports = [
     "github.com/asdine/storm",
     "github.com/asdine/storm/codec/msgpack",
+    "github.com/asdine/storm/q",
     "github.com/go-chi/chi",
     "github.com/go-chi/chi/middleware",
     "github.com/go-chi/jwtauth",
@@ -194,7 +171,6 @@
     "github.com/kelseyhightower/envconfig",
     "github.com/pkg/errors",
     "github.com/rs/cors",
-    "github.com/volatiletech/authboss",
     "golang.org/x/crypto/bcrypt",
   ]
   solver-name = "gps-cdcl"

@@ -2,6 +2,7 @@ package conf
 
 import (
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
@@ -9,7 +10,8 @@ import (
 
 // JWTConfiguration holds all the JWT related configuration
 type JWTConfiguration struct {
-	Secret string `json:"secret" requred:"true"`
+	Secret string        `json:"secret" required:"true"`
+	Exp    time.Duration `json:"exp" required:"true" default:"3600s"`
 }
 
 // Configuration holds configuration struct

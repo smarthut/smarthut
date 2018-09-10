@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/smarthut/smarthut/store"
@@ -49,11 +50,10 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 	r.Use(middleware.Recoverer)
 	r.Use(cors.Handler)
 
-	// Protected routes
+	// Public routes
 	r.Group(func(r chi.Router) {
-		// Seek, verify and validate JWT tokens
-		// r.Use(jwtauth.Verifier(tokenAuth))
-		// r.Use(jwtauth.Authenticator)
+		// Returns the JWT token
+		r.Post("/auth", api.authenticate)
 
 		// APIv1 routes
 		r.Route("/api/v1", func(r chi.Router) {
@@ -84,6 +84,22 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 				})
 			})
 		})
+	})
+
+	// Protected routes
+	r.Group(func(r chi.Router) {
+		r.Use(jwtauth.Verifier(api.tokenAuth))
+		r.Use(jwtauth.Authenticator)
+
+		// This endpoint is used to test a JWT token
+		r.Get("/token", func(w http.ResponseWriter, r *http.Request) {
+			_, claims, err := jwtauth.FromContext(r.Context())
+			if err != nil {
+				handleError(err, w, r)
+				return
+			}
+			w.Write([]byte(fmt.Sprintf("protected area. hi %v", claims["username"])))
+		})
 
 		// APIv2 routes
 		r.Route("/api/v2", func(r chi.Router) {
@@ -107,19 +123,6 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 		})
 	})
 
-	// Public routes
-	r.Group(func(r chi.Router) {
-		r.Post("/auth", api.authenticate)
-	})
-
-	r.Group(func(r chi.Router) {
-		r.Use(jwtauth.Verifier(api.tokenAuth))
-		r.Use(jwtauth.Authenticator)
-		r.Get("/token", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("welcome, mr.user"))
-		})
-	})
-
 	api.handler = r
 	return api
 }
@@ -128,85 +131,3 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 func (a *API) Start(addr string) {
 	http.ListenAndServe(addr, a.handler)
 }
-
-// func newRouter() http.Handler {
-// 	tokenAuth = jwtauth.New("HS256", []byte("secret"), nil)
-
-// 	r := chi.NewRouter()
-
-// 	cors := cors.New(cors.Options{
-// 		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
-// 		AllowedOrigins:   []string{"*"},
-// 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
-// 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-// 		ExposedHeaders:   []string{"Link"},
-// 		AllowCredentials: true,
-// 		MaxAge:           300,
-// 	})
-
-// 	r.Use(middleware.RequestID)
-// 	r.Use(middleware.Recoverer)
-// 	r.Use(cors.Handler)
-
-// 	// Protected routes
-// 	r.Group(func(r chi.Router) {
-// 		// Seek, verify and validate JWT tokens
-// 		// r.Use(jwtauth.Verifier(tokenAuth))
-// 		// r.Use(jwtauth.Authenticator)
-
-// 		// APIv1 routes
-// 		r.Route("/api/v1", func(r chi.Router) {
-// 			// User routes
-// 			r.Route("/user", func(r chi.Router) {
-// 				r.Get("/", handler.ListUsers)
-// 				r.Get("/{username}", handler.GetUser)
-// 			})
-
-// 			// Device router
-// 			r.Route("/device", func(r chi.Router) {
-// 				r.Get("/", handler.ListDevices)
-// 				// TODO: add POST   to CREATE device
-// 				// TODO: add PUT    to UPDATE device
-// 				// TODO: add DELETE to REMOVE device
-// 				r.Route("/{devicename}", func(r chi.Router) {
-// 					r.Get("/", handler.GetDevice)
-// 					r.Post("/socket", handler.SetSocket)
-// 				})
-// 			})
-// 		})
-// 	})
-
-// 	// Public routes
-// 	r.Group(func(r chi.Router) {
-// 		r.Post("/token", authenticateHandler)
-// 	})
-
-// 	return r
-// }
-
-// func authenticateHandler(w http.ResponseWriter, r *http.Request) {
-// 	username := r.FormValue("username")
-// 	password := r.FormValue("password")
-
-// 	u, err := model.GetUser(username)
-// 	if err != nil {
-// 		log.Println(err)
-// 	} else {
-// 		if err := u.Validate(password); err != nil {
-// 			fmt.Println("Password not match")
-// 		} else {
-// 			_, tokenString, _ := tokenAuth.Encode(jwtauth.Claims{
-// 				"user_id": username,
-// 			})
-// 			http.SetCookie(w, &http.Cookie{
-// 				Name:     "jwt",
-// 				Value:    tokenString,
-// 				Domain:   r.URL.Host,
-// 				Expires:  time.Now().Add(1 * time.Hour),
-// 				Secure:   false,
-// 				HttpOnly: true,
-// 			})
-// 			w.Write([]byte(tokenString))
-// 		}
-// 	}
-// }
