@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-chi/jwtauth"
 	"github.com/pkg/errors"
+
 	"github.com/smarthut/smarthut/model"
 )
 
