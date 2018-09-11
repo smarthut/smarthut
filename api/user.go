@@ -20,7 +20,7 @@ func (api *API) userCtx(next http.Handler) http.Handler {
 
 		user := new(model.User)
 		if err := api.db.One("Username", claims["sub"], &user); err != nil {
-			handleError(errors.Wrapf(err, "unable to find user with name %s", claims["user"]), w, r)
+			handleError(errors.Wrapf(err, "unable to find user with name %s", claims["sub"]), w, r)
 			return
 		}
 		ctx := context.WithValue(r.Context(), userKey, user)

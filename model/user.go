@@ -22,6 +22,7 @@ type User struct {
 	Password string `json:"-"`                       // encrypted password
 	Email    string `json:"email" storm:"unique"`
 	Name     string `json:"name"`
+	Admin    bool   `json:"admin"`
 	Role     string `json:"role"`
 
 	CreatedAt time.Time `json:"created_at"`

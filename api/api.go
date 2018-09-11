@@ -55,6 +55,9 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 		// Returns the JWT token
 		r.Post("/auth", api.authenticate)
 
+		// TODO: Remove API calls from public routes
+		// BODY: All API calls must provide JWT token
+
 		// APIv1 routes
 		r.Route("/api/v1", func(r chi.Router) {
 			// User routes
@@ -98,7 +101,7 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 				handleError(err, w, r)
 				return
 			}
-			w.Write([]byte(fmt.Sprintf("protected area. hi %v", claims["user"])))
+			w.Write([]byte(fmt.Sprintf("protected area. hi %v", claims["sub"])))
 		})
 
 		// APIv2 routes

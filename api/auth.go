@@ -37,7 +37,8 @@ func (api *API) authenticate(w http.ResponseWriter, r *http.Request) {
 		"role": user.Role,
 	}
 	claims.SetIssuedNow()
-	// TODO: implement refresh token
+	// TODO: Implement refresh token
+	// BODY: At the moment JWT won't expire at all
 	// claims.SetExpiryIn(api.config.JWT.Exp)
 	_, tokenString, err := api.tokenAuth.Encode(claims)
 	if err != nil {
