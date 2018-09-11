@@ -33,7 +33,7 @@ func (api *API) authenticate(w http.ResponseWriter, r *http.Request) {
 
 	// Generate a new JWT token
 	claims := jwtauth.Claims{
-		"user": user.Username,
+		"sub":  user.Username,
 		"role": user.Role,
 	}
 	claims.SetIssuedNow()
