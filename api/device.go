@@ -97,6 +97,7 @@ func (api *API) getSocket(w http.ResponseWriter, r *http.Request) {
 		handleError(err, w, r)
 		return
 	}
+	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

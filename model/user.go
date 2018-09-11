@@ -10,11 +10,6 @@ import (
 	"github.com/smarthut/smarthut/store"
 )
 
-const (
-	userPath = "/data/users/"
-	dataExt  = ".json"
-)
-
 var (
 	// ErrNotExist is returned when a user does not exist
 	ErrNotExist = errors.New("user does not exist")

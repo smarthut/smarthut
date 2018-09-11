@@ -98,11 +98,13 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 				handleError(err, w, r)
 				return
 			}
-			w.Write([]byte(fmt.Sprintf("protected area. hi %v", claims["username"])))
+			w.Write([]byte(fmt.Sprintf("protected area. hi %v", claims["user"])))
 		})
 
 		// APIv2 routes
 		r.Route("/api/v2", func(r chi.Router) {
+			// r.Use(api.userCtx)
+
 			// User routes
 			r.Route("/user", func(r chi.Router) {
 				r.Get("/", api.listUsers)
@@ -113,8 +115,24 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 					r.Delete("/", api.deleteUser)
 				})
 			})
+
 			// Device routes
-			// ...
+			r.Route("/device", func(r chi.Router) {
+				r.Get("/", api.listDevices)
+				r.Post("/", api.createDevice)
+				r.Route("/{device_name}", func(r chi.Router) {
+					r.Use(api.deviceCtx)
+					r.Get("/", api.getDevice)
+					r.Put("/", api.updateDevice)
+					r.Delete("/", api.deleteDevice)
+					// Socket operations
+					r.Route("/socket", func(r chi.Router) {
+						r.Get("/", api.getSocket)
+						r.Post("/", api.setSocket)
+					})
+				})
+			})
+
 			// Things
 			r.Route("/thing", func(r chi.Router) {
 				r.Get("/", api.listThings)

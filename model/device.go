@@ -4,11 +4,6 @@ import (
 	"time"
 )
 
-const (
-	devicePath = "/data/devices/"
-	// dataExt    = ".json"
-)
-
 // Device holds device data
 type Device struct {
 	ID      int    `json:"id" storm:"id,increment"` // device id
@@ -36,10 +31,3 @@ func NewDevice(name, host, title string) (*Device, error) {
 
 	return device, nil
 }
-
-// // SetSockets ...
-// func (d *Device) SetSockets(db *store.DB, sockets []SocketInfo) error {
-// 	d.Sockets = sockets
-// 	d.UpdatedAt = time.Now()
-// 	return db.UpdateField(d, "Sockets", d.Sockets)
-// }
