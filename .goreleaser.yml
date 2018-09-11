@@ -19,6 +19,7 @@ changelog:
       - '^docs:'
       - '^test:'
       - '^chore:'
+      - '^repo:'
       - typo
       - Merge pull request
       - Merge branch
