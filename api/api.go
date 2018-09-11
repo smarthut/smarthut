@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/smarthut/smarthut/store"
@@ -17,21 +18,21 @@ var tokenAuth *jwtauth.JWTAuth
 
 // API is the main REST API
 type API struct {
-	handler http.Handler
-	db      *store.DB
-	config  *conf.Configuration
-	version string
+	handler   http.Handler
+	db        *store.DB
+	config    *conf.Configuration
+	tokenAuth *jwtauth.JWTAuth
+	version   string
 }
 
 // NewAPI instantiates a new REST API
 func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 	api := &API{
-		config:  config,
-		db:      db,
-		version: version,
+		config:    config,
+		db:        db,
+		tokenAuth: jwtauth.New("HS256", []byte(config.JWT.Secret), nil),
+		version:   version,
 	}
-
-	tokenAuth = jwtauth.New("HS256", []byte("secret"), nil)
 
 	r := chi.NewRouter()
 
@@ -49,11 +50,13 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 	r.Use(middleware.Recoverer)
 	r.Use(cors.Handler)
 
-	// Protected routes
+	// Public routes
 	r.Group(func(r chi.Router) {
-		// Seek, verify and validate JWT tokens
-		// r.Use(jwtauth.Verifier(tokenAuth))
-		// r.Use(jwtauth.Authenticator)
+		// Returns the JWT token
+		r.Post("/auth", api.authenticate)
+
+		// TODO: Remove API calls from public routes
+		// BODY: All API calls must provide JWT token
 
 		// APIv1 routes
 		r.Route("/api/v1", func(r chi.Router) {
@@ -84,9 +87,27 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 				})
 			})
 		})
+	})
+
+	// Protected routes
+	r.Group(func(r chi.Router) {
+		r.Use(jwtauth.Verifier(api.tokenAuth))
+		r.Use(jwtauth.Authenticator)
+
+		// This endpoint is used to test a JWT token
+		r.Get("/token", func(w http.ResponseWriter, r *http.Request) {
+			_, claims, err := jwtauth.FromContext(r.Context())
+			if err != nil {
+				handleError(err, w, r)
+				return
+			}
+			w.Write([]byte(fmt.Sprintf("protected area. hi %v", claims["sub"])))
+		})
 
 		// APIv2 routes
 		r.Route("/api/v2", func(r chi.Router) {
+			// r.Use(api.userCtx)
+
 			// User routes
 			r.Route("/user", func(r chi.Router) {
 				r.Get("/", api.listUsers)
@@ -97,19 +118,30 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 					r.Delete("/", api.deleteUser)
 				})
 			})
+
 			// Device routes
-			// ...
+			r.Route("/device", func(r chi.Router) {
+				r.Get("/", api.listDevices)
+				r.Post("/", api.createDevice)
+				r.Route("/{device_name}", func(r chi.Router) {
+					r.Use(api.deviceCtx)
+					r.Get("/", api.getDevice)
+					r.Put("/", api.updateDevice)
+					r.Delete("/", api.deleteDevice)
+					// Socket operations
+					r.Route("/socket", func(r chi.Router) {
+						r.Get("/", api.getSocket)
+						r.Post("/", api.setSocket)
+					})
+				})
+			})
+
 			// Things
 			r.Route("/thing", func(r chi.Router) {
 				r.Get("/", api.listThings)
 				// ...
 			})
 		})
-	})
-
-	// Public routes
-	r.Group(func(r chi.Router) {
-		r.Post("/token", api.authenticate)
 	})
 
 	api.handler = r
@@ -120,85 +152,3 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 func (a *API) Start(addr string) {
 	http.ListenAndServe(addr, a.handler)
 }
-
-// func newRouter() http.Handler {
-// 	tokenAuth = jwtauth.New("HS256", []byte("secret"), nil)
-
-// 	r := chi.NewRouter()
-
-// 	cors := cors.New(cors.Options{
-// 		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
-// 		AllowedOrigins:   []string{"*"},
-// 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
-// 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-// 		ExposedHeaders:   []string{"Link"},
-// 		AllowCredentials: true,
-// 		MaxAge:           300,
-// 	})
-
-// 	r.Use(middleware.RequestID)
-// 	r.Use(middleware.Recoverer)
-// 	r.Use(cors.Handler)
-
-// 	// Protected routes
-// 	r.Group(func(r chi.Router) {
-// 		// Seek, verify and validate JWT tokens
-// 		// r.Use(jwtauth.Verifier(tokenAuth))
-// 		// r.Use(jwtauth.Authenticator)
-
-// 		// APIv1 routes
-// 		r.Route("/api/v1", func(r chi.Router) {
-// 			// User routes
-// 			r.Route("/user", func(r chi.Router) {
-// 				r.Get("/", handler.ListUsers)
-// 				r.Get("/{username}", handler.GetUser)
-// 			})
-
-// 			// Device router
-// 			r.Route("/device", func(r chi.Router) {
-// 				r.Get("/", handler.ListDevices)
-// 				// TODO: add POST   to CREATE device
-// 				// TODO: add PUT    to UPDATE device
-// 				// TODO: add DELETE to REMOVE device
-// 				r.Route("/{devicename}", func(r chi.Router) {
-// 					r.Get("/", handler.GetDevice)
-// 					r.Post("/socket", handler.SetSocket)
-// 				})
-// 			})
-// 		})
-// 	})
-
-// 	// Public routes
-// 	r.Group(func(r chi.Router) {
-// 		r.Post("/token", authenticateHandler)
-// 	})
-
-// 	return r
-// }
-
-// func authenticateHandler(w http.ResponseWriter, r *http.Request) {
-// 	username := r.FormValue("username")
-// 	password := r.FormValue("password")
-
-// 	u, err := model.GetUser(username)
-// 	if err != nil {
-// 		log.Println(err)
-// 	} else {
-// 		if err := u.Validate(password); err != nil {
-// 			fmt.Println("Password not match")
-// 		} else {
-// 			_, tokenString, _ := tokenAuth.Encode(jwtauth.Claims{
-// 				"user_id": username,
-// 			})
-// 			http.SetCookie(w, &http.Cookie{
-// 				Name:     "jwt",
-// 				Value:    tokenString,
-// 				Domain:   r.URL.Host,
-// 				Expires:  time.Now().Add(1 * time.Hour),
-// 				Secure:   false,
-// 				HttpOnly: true,
-// 			})
-// 			w.Write([]byte(tokenString))
-// 		}
-// 	}
-// }

@@ -10,11 +10,6 @@ import (
 	"github.com/smarthut/smarthut/store"
 )
 
-const (
-	userPath = "/data/users/"
-	dataExt  = ".json"
-)
-
 var (
 	// ErrNotExist is returned when a user does not exist
 	ErrNotExist = errors.New("user does not exist")
@@ -22,24 +17,32 @@ var (
 
 // User holds a user data
 type User struct {
-	Login    string `json:"login" storm:"id"` // user name
-	Password string `json:"-"`                // encrypted password
+	ID       int    `json:"id" storm:"id,increment"` // user id
+	Username string `json:"username" storm:"unique"` // user name
+	Password string `json:"-"`                       // encrypted password
 	Email    string `json:"email" storm:"unique"`
 	Name     string `json:"name"`
+	Admin    bool   `json:"admin"`
 	Role     string `json:"role"`
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// NewUser initializes a new user from a login, email and password
-func NewUser(login, email, password string) (*User, error) {
+// Credentials holds credential data
+type Credentials struct {
+	Login    string `json:"login"`    // Username or Email
+	Password string `json:"password"` // Password
+}
+
+// NewUser initializes a new user from a username, email and password
+func NewUser(username, email, password string) (*User, error) {
 	pw, err := hashPassword(password)
 	if err != nil {
 		return nil, err
 	}
 	user := &User{
-		Login:     login,
+		Username:  username,
 		Email:     email,
 		Password:  pw,
 		CreatedAt: time.Now(),

@@ -16,7 +16,7 @@ type DB struct {
 
 // NewStore initializes a new store
 func NewStore(storepath string) (*DB, error) {
-	// Use gob instead of JSON
+	// Use msgpack instead of JSON, this allows to control exported data by using 'json' tags in structs defenitions
 	db, err := storm.Open(storepath+databaseFileName, storm.Codec(msgpack.Codec))
 	if err != nil {
 		return nil, err
