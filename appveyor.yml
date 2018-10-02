@@ -1,6 +1,8 @@
 version: 1.0.{build}
 platform: x64
 
+build: off
+
 skip_tags: true
 
 cache:

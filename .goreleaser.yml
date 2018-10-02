@@ -1,5 +1,5 @@
 builds:
-  - main: main.go
+  - main: .cmd/smarthut
     binary: smarthut
     goarch:
       - 386
@@ -35,7 +35,7 @@ scoop:
     owner: smarthut
     name: scoop-bucket
   homepage: https://smarthut.github.io
-  description: generic agent for accessing IoT devices
+  description: smarthome automation tool
   license: MIT
 dockers:
   - image: smarthut/smarthut

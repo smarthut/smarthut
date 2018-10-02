@@ -10,7 +10,7 @@ install:
   - dep ensure
 
 script:
-  - make ci
+  - go build ./cmd/smarthut
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
