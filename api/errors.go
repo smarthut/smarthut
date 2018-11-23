@@ -7,12 +7,12 @@ import (
 	"github.com/go-chi/render"
 )
 
-// Message struct contains error
-type Message struct {
+// ErrorResponse struct contains error
+type ErrorResponse struct {
 	Error string `json:"error,omitempty"`
 }
 
 func handleError(err error, w http.ResponseWriter, r *http.Request) {
 	log.Println(err)
-	render.JSON(w, r, Message{Error: err.Error()})
+	render.JSON(w, r, ErrorResponse{Error: err.Error()})
 }

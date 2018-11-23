@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/smarthut/smarthut"
 	"github.com/smarthut/smarthut/api"
-	"github.com/smarthut/smarthut/conf"
 	"github.com/smarthut/smarthut/store"
 )
 
@@ -16,7 +16,7 @@ var (
 )
 
 func main() {
-	config, err := conf.Load("")
+	config, err := smarthut.LoadConfiguration("")
 	if err != nil {
 		fmt.Println(err)
 	}

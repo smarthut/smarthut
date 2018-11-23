@@ -2,16 +2,17 @@ package api
 
 import (
 	"fmt"
+	"log"
 	"net/http"
-
-	"github.com/smarthut/smarthut/store"
+	"os"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/jwtauth"
 	"github.com/rs/cors"
 
-	"github.com/smarthut/smarthut/conf"
+	"github.com/smarthut/smarthut"
+	"github.com/smarthut/smarthut/store"
 )
 
 var tokenAuth *jwtauth.JWTAuth
@@ -20,13 +21,13 @@ var tokenAuth *jwtauth.JWTAuth
 type API struct {
 	handler   http.Handler
 	db        *store.DB
-	config    *conf.Configuration
+	config    *smarthut.Configuration
 	tokenAuth *jwtauth.JWTAuth
 	version   string
 }
 
 // NewAPI instantiates a new REST API
-func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
+func NewAPI(config *smarthut.Configuration, db *store.DB, version string) *API {
 	api := &API{
 		config:    config,
 		db:        db,
@@ -46,6 +47,13 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 		MaxAge:           300,
 	})
 
+	// disable log colors
+	middleware.DefaultLogger = middleware.RequestLogger(&middleware.DefaultLogFormatter{
+		Logger:  log.New(os.Stdout, "", log.LstdFlags),
+		NoColor: true,
+	})
+
+	r.Use(middleware.Logger)
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Recoverer)
 	r.Use(cors.Handler)
@@ -74,7 +82,7 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 			r.Route("/device", func(r chi.Router) {
 				r.Get("/", api.listDevices)
 				r.Post("/", api.createDevice)
-				r.Route("/{device_name}", func(r chi.Router) {
+				r.Route("/{device}", func(r chi.Router) {
 					r.Use(api.deviceCtx)
 					r.Get("/", api.getDevice)
 					r.Put("/", api.updateDevice)
@@ -109,6 +117,7 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 			// r.Use(api.userCtx)
 
 			// User routes
+			r.Get("/users", api.listUsers)
 			r.Route("/user", func(r chi.Router) {
 				r.Get("/", api.listUsers)
 				r.Post("/", api.createUser)
@@ -123,11 +132,12 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 			r.Route("/device", func(r chi.Router) {
 				r.Get("/", api.listDevices)
 				r.Post("/", api.createDevice)
-				r.Route("/{device_name}", func(r chi.Router) {
+				r.Route("/{device}", func(r chi.Router) {
 					r.Use(api.deviceCtx)
 					r.Get("/", api.getDevice)
 					r.Put("/", api.updateDevice)
 					r.Delete("/", api.deleteDevice)
+					r.Get("/history", api.getDeviceHistory)
 					// Socket operations
 					r.Route("/socket", func(r chi.Router) {
 						r.Get("/", api.getSocket)
@@ -136,10 +146,27 @@ func NewAPI(config *conf.Configuration, db *store.DB, version string) *API {
 				})
 			})
 
-			// Things
-			r.Route("/thing", func(r chi.Router) {
+			// JSON bucket routes
+			r.Get("/buckets", api.listBuckets)
+			r.Route("/bucket", func(r chi.Router) {
+				r.Get("/", api.listBuckets)
+				r.Post("/", api.createBucket)
+				r.Route("/{bucket}", func(r chi.Router) {
+					r.Use(api.bucketCtx)
+					r.Get("/", api.getBucket)
+					r.Put("/", api.updateBucket)
+					r.Delete("/", api.deleteBucket)
+				})
+			})
+
+			// Channel
+			r.Route("/channel", func(r chi.Router) {
+				// Return the list of all channels
 				r.Get("/", api.listThings)
-				// ...
+				r.Route("/{channel}", func(r chi.Router) {
+					r.Get("/", api.getThing)
+					r.Get("/value", api.getThing)
+				})
 			})
 		})
 	})

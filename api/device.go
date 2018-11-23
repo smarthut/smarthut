@@ -13,19 +13,13 @@ import (
 	"github.com/smarthut/smarthut/model"
 )
 
-// DeviceResponse holds device data
-type DeviceResponse struct {
-	*model.Device
-}
-
 func (api *API) deviceCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		device := new(model.Device)
-		if deviceName := chi.URLParam(r, "device_name"); deviceName != "" {
-			if err := api.db.One("Name", deviceName, device); err != nil {
-				handleError(errors.Wrapf(err, "unable to find device with name %s", deviceName), w, r)
-				return
-			}
+		deviceName := chi.URLParam(r, "device")
+		device, err := model.GetDevice(api.db, deviceName)
+		if err != nil {
+			handleError(errors.Wrapf(err, "unable to find device with name %s", deviceName), w, r)
+			return
 		}
 		ctx := context.WithValue(r.Context(), deviceKey, device)
 		next.ServeHTTP(w, r.WithContext(ctx))
@@ -33,8 +27,8 @@ func (api *API) deviceCtx(next http.Handler) http.Handler {
 }
 
 func (api *API) listDevices(w http.ResponseWriter, r *http.Request) {
-	var devices []model.Device
-	if err := api.db.All(&devices); err != nil {
+	devices, err := model.AllDevices(api.db)
+	if err != nil {
 		handleError(err, w, r)
 		return
 	}
@@ -42,23 +36,26 @@ func (api *API) listDevices(w http.ResponseWriter, r *http.Request) {
 }
 
 func (api *API) createDevice(w http.ResponseWriter, r *http.Request) {
-	var d model.Device
-	if err := render.DecodeJSON(r.Body, &d); err != nil {
+	var data model.Device
+	if err := render.DecodeJSON(r.Body, &data); err != nil {
 		handleError(err, w, r)
 		return
 	}
-	d.CreatedAt = time.Now()
-	d.UpdatedAt = time.Now()
-	if err := api.db.Save(&d); err != nil {
+	device, err := model.NewDevice(data.Name, data.Host, data.Title)
+	if err != nil {
 		handleError(err, w, r)
 		return
 	}
-	render.JSON(w, r, struct{}{})
+	if err := api.db.Save(device); err != nil {
+		handleError(err, w, r)
+		return
+	}
+	render.JSON(w, r, device)
 }
 
 func (api *API) getDevice(w http.ResponseWriter, r *http.Request) {
 	device := r.Context().Value(deviceKey).(*model.Device)
-	render.JSON(w, r, DeviceResponse{Device: device})
+	render.JSON(w, r, device)
 }
 
 func (api *API) updateDevice(w http.ResponseWriter, r *http.Request) {
@@ -82,11 +79,15 @@ func (api *API) updateDevice(w http.ResponseWriter, r *http.Request) {
 
 func (api *API) deleteDevice(w http.ResponseWriter, r *http.Request) {
 	device := r.Context().Value(deviceKey).(*model.Device)
-	if err := api.db.DeleteStruct(&device); err != nil {
+	if err := device.Delete(api.db); err != nil {
 		handleError(err, w, r)
 		return
 	}
 	render.JSON(w, r, struct{}{})
+}
+
+func (api *API) getDeviceHistory(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("not implemented yet"))
 }
 
 func (api *API) getSocket(w http.ResponseWriter, r *http.Request) {
