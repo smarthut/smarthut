@@ -18,8 +18,8 @@ type Device struct {
 	ID          int    `json:"id" storm:"id,increment"` // device id
 	Name        string `json:"name" storm:"unique"`     // device slug
 	Host        string `json:"host" storm:"unique"`     // device url
-	Description string `json:"description"`
 	Title       string `json:"title"`
+	Description string `json:"description"`
 	Sockets     []struct {
 		Type        string `json:"type"`        // type string representation, i.e. for providing proper icons
 		Description string `json:"description"` // human readable socket description

@@ -2,10 +2,10 @@ package model
 
 import (
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/asdine/storm/q"
-
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/smarthut/smarthut/store"
@@ -48,7 +48,7 @@ func NewUser(username, email, password string) (*User, error) {
 		return nil, err
 	}
 	user := &User{
-		Username:  username,
+		Username:  strings.ToLower(username),
 		Email:     email,
 		Password:  pw,
 		CreatedAt: time.Now(),

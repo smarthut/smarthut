@@ -2,7 +2,7 @@ package api
 
 import (
 	"context"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 
@@ -92,38 +92,28 @@ func (api *API) getDeviceHistory(w http.ResponseWriter, r *http.Request) {
 
 func (api *API) getSocket(w http.ResponseWriter, r *http.Request) {
 	device := r.Context().Value(deviceKey).(*model.Device)
-
 	resp, err := http.Get(device.Host + "/api/v1")
 	if err != nil {
 		handleError(err, w, r)
 		return
 	}
 	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
+	if _, err := io.Copy(w, resp.Body); err != nil {
 		handleError(err, w, r)
 		return
 	}
-
-	w.Write(body)
 }
 
 func (api *API) setSocket(w http.ResponseWriter, r *http.Request) {
 	device := r.Context().Value(deviceKey).(*model.Device)
-
 	resp, err := http.Post(device.Host+"/api/v1/socket", "application/json; charset=utf-8", r.Body)
 	if err != nil {
 		handleError(err, w, r)
 		return
 	}
 	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
+	if _, err := io.Copy(w, resp.Body); err != nil {
 		handleError(err, w, r)
 		return
 	}
-
-	w.Write(body)
 }
