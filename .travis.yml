@@ -2,18 +2,16 @@ language: go
 go:
   - "1.11.x"
 
+env:
+  - GO111MODULE=on
+
 services:
   - docker
 
-install:
-  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-  - dep ensure
-
 script:
-  - go build ./cmd/smarthut
+  - go test ./...
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
   - test -n "$TRAVIS_TAG" && docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 deploy:

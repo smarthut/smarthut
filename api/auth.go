@@ -4,7 +4,6 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/asdine/storm/q"
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
 
@@ -19,8 +18,8 @@ func (api *API) authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Try to find with Username or Email provided in the Login field
-	var user model.User
-	if err := api.db.Select(q.Or(q.StrictEq("Username", cred.Login), q.StrictEq("Email", cred.Login))).First(&user); err != nil {
+	user, err := model.GetUser(api.db, cred.Login)
+	if err != nil {
 		handleError(err, w, r)
 		return
 	}
@@ -33,8 +32,9 @@ func (api *API) authenticate(w http.ResponseWriter, r *http.Request) {
 
 	// Generate a new JWT token
 	claims := jwtauth.Claims{
-		"sub":  user.Username,
-		"role": user.Role,
+		"sub":   user.Username,
+		"admin": user.Admin,
+		"role":  user.Role,
 	}
 	claims.SetIssuedNow()
 	// TODO: Implement refresh token

@@ -1,4 +1,4 @@
-package conf
+package smarthut
 
 import (
 	"os"
@@ -8,19 +8,19 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-// JWTConfiguration holds all the JWT related configuration
-type JWTConfiguration struct {
-	Secret string        `json:"secret" required:"true"`
-	Exp    time.Duration `json:"exp" required:"true" default:"3600s"`
-}
-
 // Configuration holds configuration struct
 type Configuration struct {
 	API struct {
-		Host string
-		Port int `envconfig:"PORT" default:"8080"`
+		Host string `envconfig:"HOST"`
+		Port int    `envconfig:"PORT" default:"8080"`
 	}
 	JWT JWTConfiguration `json:"jwt"`
+}
+
+// JWTConfiguration holds all the JWT related configuration
+type JWTConfiguration struct {
+	Secret string        `json:"secret" required:"true"`
+	Exp    time.Duration `json:"exp" default:"3600s"`
 }
 
 func loadEnvironment(filename string) error {
@@ -35,8 +35,8 @@ func loadEnvironment(filename string) error {
 	return err
 }
 
-// Load loads configuration
-func Load(filename string) (*Configuration, error) {
+// LoadConfiguration loads configuration
+func LoadConfiguration(filename string) (*Configuration, error) {
 	if err := loadEnvironment(filename); err != nil {
 		return nil, err
 	}

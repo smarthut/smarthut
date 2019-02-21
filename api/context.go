@@ -9,4 +9,5 @@ func (c contextKey) String() string {
 const (
 	deviceKey = contextKey("device")
 	userKey   = contextKey("user")
+	bucketKey = contextKey("bucket")
 )

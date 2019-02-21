@@ -5,23 +5,14 @@ build: off
 
 skip_tags: true
 
-cache:
-  - '%USERPROFILE%\scoop\cache'
-
 clone_folder: c:\gopath\src\github\smarthut\smarthut
 
 environment:
   GOPATH: c:\gopath
+  GO111MODULE: on
 
 init:
-  - ps: iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
-  - ps: $ErrorActionPreference = 'Continue'
-  - ps: scoop update --quiet
   - ps: go version
-
-install:
-  - ps: scoop install dep
-  - ps: dep ensure
 
 build_script:
   - go test ./...
